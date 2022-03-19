@@ -2,14 +2,15 @@ package com.example.project;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.function.Consumer;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class GivenExampleTest {
 
     @Test
     void test() {
-        Consumer<Double> stdout = System.out::println;
-        FoldMedian median = new FoldMedian(stdout);
+        CapturingConsumer<Double> pipelineResult = new CapturingConsumer<>();
+        FoldMedian median = new FoldMedian(pipelineResult);
         FixedEventWindow windowSized3 = new FixedEventWindow(3, median::onReceive);
         FoldSum foldSum = new FoldSum(windowSized3::onReceive);
         FixedEventWindow windowSized2 = new FixedEventWindow(2, foldSum::onReceive);
@@ -22,6 +23,7 @@ public class GivenExampleTest {
         pipelineStart.onReceive(4);
         pipelineStart.onReceive(5);
         pipelineStart.onReceive(6);
-        // todo assert result is 7 without looking at stdout
+
+        assertThat(pipelineResult.getCapturedValue(), is(7.0));
     }
 }
