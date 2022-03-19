@@ -22,5 +22,6 @@ public class GivenExampleTest {
         pipelineStart.onReceive(4);
         pipelineStart.onReceive(5);
         pipelineStart.onReceive(6);
+        // todo assert result is 7 without looking at stdout
     }
 }
