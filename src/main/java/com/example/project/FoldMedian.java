@@ -6,9 +6,9 @@ import java.util.function.Consumer;
 
 public class FoldMedian {
 
-    private final Consumer<Integer> mCallback;
+    private final Consumer<Double> mCallback;
 
-    public FoldMedian(Consumer<Integer> callback) {
+    public FoldMedian(Consumer<Double> callback) {
         mCallback = callback;
     }
 
@@ -16,13 +16,18 @@ public class FoldMedian {
         mCallback.accept(calcMedian(nums));
     }
 
-    private static int calcMedian(List<Integer> nums) {
+    private static double calcMedian(List<Integer> nums) {
         Collections.sort(nums);
         if (nums.size() % 2 == 1) {
             return nums.get(nums.size() / 2);
         }
-        throw new UnsupportedOperationException("median of even number is not yet supported");
+        int rightMiddleIndex = nums.size() / 2;
+        int leftMiddleIndex = rightMiddleIndex - 1;
+        return average(nums.get(leftMiddleIndex),
+                nums.get(rightMiddleIndex));
     }
 
-
+    private static double average(int a, int b) {
+        return (a + b) / 2.0;
+    }
 }

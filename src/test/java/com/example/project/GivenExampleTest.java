@@ -8,7 +8,7 @@ public class GivenExampleTest {
 
     @Test
     void test() {
-        Consumer<Integer> stdout = System.out::println;
+        Consumer<Double> stdout = System.out::println;
         FoldMedian median = new FoldMedian(stdout);
         FixedEventWindow windowSized3 = new FixedEventWindow(3, median::onReceive);
         FoldSum foldSum = new FoldSum(windowSized3::onReceive);
