@@ -16,6 +16,16 @@ public class GivenExamplesTest {
         FixedEventWindow windowSized2 = new FixedEventWindow(2, foldSum::onReceive);
         return new Filter(i -> i > 0, windowSized2::onReceive);
     }
+    /*
+    If I had more time, I would wrap it with a fluent api -
+    private static DataPipeline create(Consumer<Double> resultCallback) {
+        return DataPipelineBuilder.startingWith(Filter.by(i -> i > 0))
+                .andThen(FixedEventWindow.withSize(2))
+                .andThen(FoldSum.create())
+                .andThen(FixedEventWindow.withSize(3))
+                .andThen(FoldMedian.create())
+                .andFinally(resultCallback);
+    }*/
 
     @Test
     void example_1() {
