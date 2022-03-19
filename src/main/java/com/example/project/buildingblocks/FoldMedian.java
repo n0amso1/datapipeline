@@ -1,18 +1,25 @@
-package com.example.project;
+package com.example.project.buildingblocks;
+
+import com.example.project.datapipeline.BuildingBlock;
+import com.example.project.datapipeline.DataPipelineBuilder;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class FoldMedian {
+public class FoldMedian implements BuildingBlock {
 
     private final Consumer<Double> mCallback;
 
-    public FoldMedian(Consumer<Double> callback) {
+    public static DataPipelineBuilder.Factory<BuildingBlock> create() {
+        return (callback) -> new FoldMedian((Consumer<Double>) callback);
+    }
+
+    FoldMedian(Consumer<Double> callback) {
         mCallback = callback;
     }
 
-    public void onReceive(List<Integer> nums) {
+    void onReceive(List<Integer> nums) {
         mCallback.accept(calcMedian(nums));
     }
 
@@ -29,5 +36,10 @@ public class FoldMedian {
 
     private static double average(int a, int b) {
         return (a + b) / 2.0;
+    }
+
+    @Override
+    public Consumer<?> getInputFunc() {
+        return (consumer) -> this.onReceive((List<Integer>) consumer);
     }
 }

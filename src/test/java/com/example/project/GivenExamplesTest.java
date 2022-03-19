@@ -1,5 +1,11 @@
 package com.example.project;
 
+import com.example.project.buildingblocks.Filter;
+import com.example.project.buildingblocks.FixedEventWindow;
+import com.example.project.buildingblocks.FoldMedian;
+import com.example.project.buildingblocks.FoldSum;
+import com.example.project.datapipeline.DataPipeline;
+import com.example.project.datapipeline.DataPipelineBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
@@ -9,36 +15,27 @@ import static org.hamcrest.Matchers.is;
 
 public class GivenExamplesTest {
 
-    private static Filter createExamplePipeline(Consumer<Double> resultCallback) {
-        FoldMedian median = new FoldMedian(resultCallback);
-        FixedEventWindow windowSized3 = new FixedEventWindow(3, median::onReceive);
-        FoldSum foldSum = new FoldSum(windowSized3::onReceive);
-        FixedEventWindow windowSized2 = new FixedEventWindow(2, foldSum::onReceive);
-        return new Filter(i -> i > 0, windowSized2::onReceive);
-    }
-    /*
-    If I had more time, I would wrap it with a fluent api -
-    private static DataPipeline create(Consumer<Double> resultCallback) {
+    private static DataPipeline createExamplePipeline(Consumer<Double> resultCallback) {
         return DataPipelineBuilder.startingWith(Filter.by(i -> i > 0))
                 .andThen(FixedEventWindow.withSize(2))
                 .andThen(FoldSum.create())
                 .andThen(FixedEventWindow.withSize(3))
                 .andThen(FoldMedian.create())
                 .andFinally(resultCallback);
-    }*/
+    }
 
     @Test
     void example_1() {
         CapturingConsumer<Double> pipelineResult = new CapturingConsumer<>();
-        Filter pipelineStart = createExamplePipeline(pipelineResult);
+        DataPipeline pipeline = createExamplePipeline(pipelineResult);
 
-        pipelineStart.onReceive(1);
-        pipelineStart.onReceive(2);
-        pipelineStart.onReceive(-5);
-        pipelineStart.onReceive(3);
-        pipelineStart.onReceive(4);
-        pipelineStart.onReceive(5);
-        pipelineStart.onReceive(6);
+        pipeline.onReceive(1);
+        pipeline.onReceive(2);
+        pipeline.onReceive(-5);
+        pipeline.onReceive(3);
+        pipeline.onReceive(4);
+        pipeline.onReceive(5);
+        pipeline.onReceive(6);
 
         assertThat(pipelineResult.getCapturedValue(), is(7.0));
     }
@@ -46,14 +43,14 @@ public class GivenExamplesTest {
     @Test
     void example_2() {
         CapturingConsumer<Double> pipelineResult = new CapturingConsumer<>();
-        Filter pipelineStart = createExamplePipeline(pipelineResult);
+        DataPipeline pipeline = createExamplePipeline(pipelineResult);
 
-        pipelineStart.onReceive(10);
-        pipelineStart.onReceive(11);
-        pipelineStart.onReceive(12);
-        pipelineStart.onReceive(13);
-        pipelineStart.onReceive(14);
-        pipelineStart.onReceive(15);
+        pipeline.onReceive(10);
+        pipeline.onReceive(11);
+        pipeline.onReceive(12);
+        pipeline.onReceive(13);
+        pipeline.onReceive(14);
+        pipeline.onReceive(15);
 
         assertThat(pipelineResult.getCapturedValue(), is(25.0));
     }
