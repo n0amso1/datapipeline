@@ -10,8 +10,8 @@ public class ApiTest {
     @Test
     void test() {
         Consumer<List<Integer>> callback = System.out::println;
-        BuildingBlock fixedEventWindow = new FixedEventWindow(3, callback);
-        BuildingBlock filter = new Filter(i -> i > 0, fixedEventWindow::onReceive);
+        FixedEventWindow fixedEventWindow = new FixedEventWindow(3, callback);
+        Filter filter = new Filter(i -> i > 0, fixedEventWindow::onReceive);
         filter.onReceive(3);
         filter.onReceive(-7);
         filter.onReceive(2);

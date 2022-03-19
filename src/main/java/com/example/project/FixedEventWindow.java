@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class FixedEventWindow implements BuildingBlock {
+public class FixedEventWindow {
     private final int mSize;
     private final List<Integer> mAggregatedEvents;
     private final Consumer<List<Integer>> mCallback;
@@ -15,7 +15,6 @@ public class FixedEventWindow implements BuildingBlock {
         mCallback = callback;
     }
 
-    @Override
     public void onReceive(int num) {
         mAggregatedEvents.add(num);
         if (mAggregatedEvents.size() == mSize) {
